@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from .models import Post
 from .forms import PostForm
+from utils.str_util import StrUtil
 
 # Create your views here.
 
@@ -13,14 +14,16 @@ def post_list(request):
         'postL': qs,
     })
 
-def post_detail(request, pk):    
-    qs = get_object_or_404(Post, pk=pk)
+def post_detail(request, pk):
+    postObj = get_object_or_404(Post, pk=pk)
+    postObj.text = StrUtil.strTohtml(postObj.text)
+    #tt = StrUtil.strTohtml("22")
     #try:
     #    qs = Post.objects.get(pk=pk)
     #except Post.DoesNotExist:
     #    raise Http404   #Page Not Found : from django.http import Http404
     return render(request, 'blog/post_detail.html', {
-        'post': qs,
+        'post': postObj,
     })
 
 def post_new(request):
