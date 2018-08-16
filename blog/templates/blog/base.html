@@ -4,11 +4,12 @@
 <html lang="ko">
     <head>
         <meta charset="utf-8" />
-        <title>Django Girls blog!!</title>
+        <title>post</title>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" />
         <link rel="stylesheet" href="{% static 'blog/blog.css' %}" />        
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
     </head>
 
     <body>
@@ -18,7 +19,7 @@
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>
             {% endif %}
-            <h1><a href="/">Django Girls Blog</a></h1>
+            <h1><a href="/">Post</a></h1>
         </div>
         
         <div class="content container">
@@ -29,5 +30,7 @@
                 </div>
             </div>
         </div>
+    <link rel="stylesheet" href="{% static 'js/jquery.js' %}" />
+    <link rel="stylesheet" href="{% static 'js/bootstrap.min.js' %}" />
     </body>
 </html>
