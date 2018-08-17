@@ -1,3 +1,8 @@
+.top-menu .glyphicon {
+    font-size: 20px;
+    margin-top: 38px;
+}
+
 .page-header {
     background-color: #3479c9;
     margin-top: 0;
@@ -11,7 +16,7 @@
 }
 
 .content {
-    margin-left: 40px;
+    /* margin-left: 40px; */
 }
 
 h1, h2, h3, h4 {
