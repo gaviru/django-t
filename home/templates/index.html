@@ -54,11 +54,26 @@
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-check"></i> 이슈토론</h4>
+                        <h4><i class="fa fa-fw fa-check"></i> <a href="blog/post_list">이슈토론</a></h4>
                     </div>
                     <div class="panel-body">
-                        <p>이슈토론 게시판...</p>
-                        <a href="blog/post_list" class="btn btn-default">더보기</a>
+                        {% comment %} <p>이슈토론 게시판...</p> {% endcomment %}
+                        
+                        <table class="">
+                                <tbody>
+                                {% for p in postL %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'post_detail' p.pk %}" >
+                                            {{ p.title }}
+                                        </a>
+                                    </td>
+                                    <td>{{ p.created_date|date:"Y-m-d" }} {{ p.created_date|date:"H:i" }}</td>
+                                    <td>-</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                     </div>
                 </div>
             </div>
