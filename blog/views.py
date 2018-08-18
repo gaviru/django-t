@@ -7,6 +7,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from .models import Post
+from .models import Itnews
+from .models import EventInfo
 
 #from django.shortcuts import get_object_or_404, redirect, render
 #from utils.str_util import StrUtil
@@ -158,3 +160,146 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 #     return render(request, 'blog/post_edit.html', {
 #         'form': form,
 #     })
+
+
+
+
+
+#######################################################################
+## It News 게시판
+#######################################################################
+
+class ItnewsListView(ListView):
+    template_name = "itnews/itnews_list.html"
+    context_object_name = 'itnewsL'
+    paginate_by = 7
+
+    def get_context_data(self, **kwargs):
+        context = super(ItnewsListView, self).get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+        return context
+
+    def get_queryset(self):
+        return Itnews.objects.filter(created_date__lte=timezone.now()
+                            ).order_by('-created_date')
+
+
+class ItnewsDetailView(DetailView):
+    model = Itnews
+    template_name = 'itnews/itnews_detail.html'
+    context_object_name = 'itnews'
+
+    def get_context_data(self, **kwargs):
+        context = super(ItnewsDetailView, self).get_context_data(**kwargs)
+        obj = self.get_object()
+        obj.view_count = obj.view_count + 1
+        obj.save()
+        return context
+
+
+class ItnewsCreateView(LoginRequiredMixin, CreateView):
+    model = Itnews
+    fields = ['title', 'text']
+    #initial = {'slug': 'auto-filling-do-not-input'}
+    template_name = 'itnews/itnews_edit.html'
+
+    def form_valid(self, form):
+        news = form.save(commit=False)
+        news.author = self.request.user
+        return super(ItnewsCreateView, self).form_valid(news)
+
+    def get_success_url(self):
+        itnews_row = Itnews.objects.order_by('-id').first()
+        return reverse_lazy('itnews_detail', args = (itnews_row.id,))
+
+
+class ItnewsUpdateView(LoginRequiredMixin, UpdateView):
+    model = Itnews
+    fields = ['title', 'text']
+    template_name = 'itnews/itnews_edit.html'
+
+    def get_success_url(self):
+        return reverse_lazy('itnews_detail', args = (self.object.id,))
+
+
+
+#######################################################################
+## Event Info 게시판
+#######################################################################
+
+class EventInfoListView(ListView):
+    template_name = "eventinfo/eventinfo_list.html"
+    context_object_name = 'eventinfoL'
+    paginate_by = 7
+
+    def get_context_data(self, **kwargs):
+        context = super(EventInfoListView, self).get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+        return context
+
+    def get_queryset(self):
+        return EventInfo.objects.filter(created_date__lte=timezone.now()
+                            ).order_by('-created_date')
+
+
+class EventInfoDetailView(DetailView):
+    model = EventInfo
+    template_name = 'eventinfo/eventinfo_detail.html'
+    context_object_name = 'eventinfo'
+
+    def get_context_data(self, **kwargs):
+        context = super(EventInfoDetailView, self).get_context_data(**kwargs)
+        obj = self.get_object()
+        obj.view_count = obj.view_count + 1
+        obj.save()
+        return context
+
+
+class EventInfoCreateView(LoginRequiredMixin, CreateView):
+    model = EventInfo
+    fields = ['title', 'text']
+    template_name = 'eventinfo/eventinfo_edit.html'
+
+    def form_valid(self, form):
+        news = form.save(commit=False)
+        news.author = self.request.user
+        return super(EventInfoCreateView, self).form_valid(news)
+
+    def get_success_url(self):
+        eventInfo_row = EventInfo.objects.order_by('-id').first()
+        return reverse_lazy('eventinfo_detail', args = (eventInfo_row.id,))
+
+
+class EventInfoUpdateView(LoginRequiredMixin, UpdateView):
+    model = EventInfo
+    fields = ['title', 'text']
+    template_name = 'eventinfo/eventinfo_edit.html'
+
+    def get_success_url(self):
+        return reverse_lazy('eventinfo_detail', args = (self.object.id,))
